@@ -2020,6 +2020,18 @@ CAmount CWalletTx::GetImmatureCredit(interfaces::Chain::Lock& locked_chain, bool
         return nImmatureCreditCached;
     }
 
+    vaulttxntype txType = GetVaultTxTypeNonContextual(*tx);
+    if (txType == TX_ALERT) {
+        vaulttxnstatus txStatus = GetTransactionStatus(tx->GetHash(), Params().GetConsensus(), txType);
+        if (txStatus == TX_PENDING) {
+            if (fUseCache && fImmatureCreditCached)
+                return nImmatureCreditCached;
+            nImmatureCreditCached = pwallet->GetCredit(*tx, ISMINE_ALL);
+            fImmatureCreditCached = true;
+            return nImmatureCreditCached;
+        }
+    }
+
     return 0;
 }
 

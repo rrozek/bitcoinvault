@@ -51,6 +51,7 @@ ENV BVAULTD_TESTNET_ENABLED 0
 ENV BVAULTD_NET_BAN_SCORE 100000
 ENV BVAULTD_NET_BAN_TIME 60
 ENV BVAULTD_COMMIT $GIT_COMMIT
+ENV BVAULTD_ZMQ_ENABLED 1
 
 COPY --from=builder /usr/local/bin/bvaultd /usr/local/bin/bvaultd
 # https://github.com/moby/moby/issues/37965

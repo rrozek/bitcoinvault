@@ -19,10 +19,12 @@ rpcallowip={{ default .Env.BVAULTD_RPC_ALLOW_IP_FIRST "127.0.0.0/24" }}
 rpcallowip={{ default .Env.BVAULTD_RPC_ALLOW_IP_SECOND "10.0.0.0/8" }}
 rpcbind=0.0.0.0
 
-zmqpubrawblock=tcp://0.0.0.0:8331
-zmqpubrawtx=tcp://0.0.0.0:8331
-zmqpubhashtx=tcp://0.0.0.0:8331
-zmqpubhashblock=tcp://0.0.0.0:8331
+{{ if eq .Env.BVAULTD_ZMQ_ENABLED "1" }}
+zmqpubrawblock=tcp://{{ default .Env.BVAULTD_ZMQ_LISTEN_HOST "0.0.0.0" }}:{{ default .Env.BVAULTD_ZMQ_LISTEN_PORT "8331" }}
+zmqpubrawtx=tcp://{{ default .Env.BVAULTD_ZMQ_LISTEN_HOST "0.0.0.0" }}:{{ default .Env.BVAULTD_ZMQ_LISTEN_PORT "8331" }}
+zmqpubhashtx=tcp://{{ default .Env.BVAULTD_ZMQ_LISTEN_HOST "0.0.0.0" }}:{{ default .Env.BVAULTD_ZMQ_LISTEN_PORT "8331" }}
+zmqpubhashblock=tcp://{{ default .Env.BVAULTD_ZMQ_LISTEN_HOST "0.0.0.0" }}:{{ default .Env.BVAULTD_ZMQ_LISTEN_PORT "8331" }}
+{{end}}
 
 {{if .Env.BVAULTD_NET_BAN_SCORE}}
 banscore={{ .Env.BVAULTD_NET_BAN_SCORE }}

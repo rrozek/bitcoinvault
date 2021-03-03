@@ -14,6 +14,9 @@ BitcoinVault
 | `BVAULTD_TESTNET_ENABLED` | undefined | Allowed: `1`, so set if you want to run in testnet
 | `BVAULTD_SERVER` | `1` | Allowed: `1` `server` parameter
 | `BVAULTD_TXINDEX` | undefined | Allowed: `1` `txindex` parameter
+| `BVAULTD_ZMQ_ENABLED` | `1` | Set other than `1` to disable ZMQ
+| `BVAULTD_ZMQ_LISTEN_HOST` | `0.0.0.0` | Address to bind ZMQ
+| `BVAULTD_ZMQ_LISTEN_PORT` | `8331` | ZMQ listen port
 
 
 For more information how config is generated see template: `templates/bvaultd.conf.tmpl`

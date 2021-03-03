@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v2.2.0 (2021-03-03)
+### Feature
+* **config:** Add option to disable ZMQ ([`e4cbdf0`](https://github.com/bitcoinvault/bitcoinvault/commit/e4cbdf094e96a27db37249195278997338191657))
+
 ## v2.1.2 (2021-02-26)
 ### Fix
 * **ci:** Set proper secret name with GitHub Token ([`c39a976`](https://github.com/bitcoinvault/bitcoinvault/commit/c39a976f114b8f3dd144f7d307a894f48e6368c0))

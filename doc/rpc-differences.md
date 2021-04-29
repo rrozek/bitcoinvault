@@ -1,10 +1,33 @@
+<a name="top">
 RPC method differences between Bitcoin and BitcoinVault
 ==============
 BitcoinVault node is a direct fork of BitcoinCore so most of the RPC methods are identical. As the development of BTCV is still in progress, it is natural that some changes appeared in current methods and there are some new methods not included in BitcoinCore. The goal of this file is to list all differences between Bitcoin and BitcoinVault in terms of RPC interface and keep this list up-to-date to let users understands easier what is it all about. To keep in mind, if this file doesn't dispel your doubts, look at official documentation of BitcoinCore RPC methods. If all of above fails it is still possible that this file is out-of-date - then feel free to contribute.
 
-### Mining
+### RPC Methods
+1. [Mining](#mining)
+    * [submitauxblock](#submitauxblock)
+    * [createauxblock](#createauxblock)
+2. [Util](#util)
+    * [createvaultalertaddress](#createvaultalertaddress)
+    * [createvaultinstantaddress](#createvaultinstantaddress)
+3. [Wallet](#wallet)
+    * [getnewvaultalertaddress](#getnewvaultalertaddress)
+    * [getnewvaultinstantaddress](#getnewvaultinstantaddress)
+    * [createrecoverytransaction](#createrecoverytransaction)
+    * [getalertbalance](#getalertbalance)
+    * [getinstantbalance](#getinstantbalance)
+    * [sendalerttoaddress](#sendalerttoaddress)
+    * [sendinstanttoaddress](#sendinstanttoaddress)
+    * [signalerttransaction](#signalerttransaction)
+    * [signinstanttransaction](#signinstanttransaction)
+    * [signrecoverytransaction](#signrecoverytransaction)
+    * [signalerttransaction](#signalerttransaction)
 
-##### submitauxblock
+<a name="mining">
+### Mining 
+
+<a name="submitauxblock">
+##### submitauxblock 
 
 Merge-mining related method. Implemented according to Namecoin's merge-mining specification.
 
@@ -23,6 +46,7 @@ Examples:
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "submitauxblock", "params": ["hash" "serialised auxpow"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="createauxblock">
 ##### createauxblock
 
 Merge-mining related method. Implemented according to Namecoin's merge-mining specification.
@@ -46,9 +70,12 @@ Examples:
 > bvault-cli createauxblock "address"
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "createauxblock", "params": ["address"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
+[Back to top](#top)
 
+<a name="util">
 ### Util
 
+<a name="createvaultalertaddress">
 ##### createvaultalertaddress
 
 3-keys related method.
@@ -77,6 +104,7 @@ As a JSON-RPC call
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "createvaultalertaddress", "params": ["\"03789ed0bb717d88f7d321a368d905e7430207ebbd82bd342cf11ae157a7ace5fd\"", "\"03dbc6764b8884a92e871274b87583e6d5c2a58819473e17e107ef3f6aa5a61626\""] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="createvaultinstantaddress">
 ##### createvaultinstantaddress
 
 3-keys related method.
@@ -86,8 +114,8 @@ Creates an instant/alert address which generates: recoverable transaction alert 
 It returns a json object with the address and redeemScript.
 
 Arguments:
-1. alert_key       (string, required) The hex-encoded public key used to generates transaction alerts
-2. instant_key     (string, required) The hex-encoded public key used to generates instant transaction
+1. alert_key       (string, required) The hex-encoded public key used to generate transaction alerts
+2. instant_key     (string, required) The hex-encoded public key used to generate instant transactions
 3. recovery_key    (string, required) The hex-encoded public key used to recover transaction alerts
 4. address_type    (string, optional, default=legacy) The address type to use. Options are "legacy", "p2sh-segwit", and "bech32".
 
@@ -106,8 +134,12 @@ As a JSON-RPC call
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "createvaultinstantaddress", "params": ["\"03789ed0bb717d88f7d321a368d905e7430207ebbd82bd342cf11ae157a7ace5fd\"", "\"03dbc6764b8884a92e871274b87583e6d5c2a58819473e17e107ef3f6aa5a61626\"", "\"039d4b4d19413c726b359351273e9d5249b7c184561ff1e920384b04079ae74f36\""] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+[Back to top](#top)
+
+<a name="wallet">
 ### Wallet
 
+<a name="getnewvaultalertaddress">
 ##### getnewvaultalertaddress
 
 3-keys related method.
@@ -136,6 +168,7 @@ As a JSON-RPC call
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getnewvaultalertaddress", "params": ["03dbc6764b8884a92e871274b87583e6d5c2a58819473e17e107ef3f6aa5a61626"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="getnewvaultinstantaddress">
 ##### getnewvaultinstantaddress
 
 3-keys related method.
@@ -165,6 +198,7 @@ As a JSON-RPC call
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getnewvaultinstantaddress", "params": ["\"03789ed0bb717d88f7d321a368d905e7430207ebbd82bd342cf11ae157a7ace5fd\"", "\"039d4b4d19413c726b359351273e9d5249b7c184561ff1e920384b04079ae74f36\""] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="createrecoverytransaction">
 ##### createrecoverytransaction
 
 3-keys related method.
@@ -205,6 +239,7 @@ Examples:
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "createrecoverytransaction", "params": ["\"myid\"", "[{\"data\":\"00010203\"}]"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="getalertbalance">
 ##### getalertbalance
 
 3-keys related method.
@@ -225,7 +260,7 @@ amount              (numeric) The total amount in BTCV received for this wallet.
 Examples:
 
 The total amount in the wallet with 1 or more confirmations
-> bvault-cli getalertbalance 
+> bvault-cli getalertbalance
 
 The total amount in the wallet at least 6 blocks confirmed
 > bvault-cli getalertbalance "*" 6
@@ -234,6 +269,7 @@ As a JSON-RPC call
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getalertbalance", "params": ["*", 6] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="getinstantbalance">
 ##### getinstantbalance
 
 3-keys related method.
@@ -263,6 +299,7 @@ As a JSON-RPC call
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getinstantbalance", "params": ["*", 6] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="sendalerttoaddress">
 ##### sendalerttoaddress
 
 3-keys related method.
@@ -292,13 +329,14 @@ Result:
 "txid"                  (string) The transaction id.
 
 Examples:
-> bvault-cli sendalerttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1
-> bvault-cli sendalerttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1 "donation" "seans outpost"
-> bvault-cli sendalerttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1 "" "" true
-> bvault-cli sendalerttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1 "" "" false false 6 UNSET "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd"
-> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "sendalerttoaddress", "params": ["1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd", 0.1, "donation", "seans outpost"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
+> bvault-cli sendalerttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1
+> bvault-cli sendalerttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1 "donation" "seans outpost"
+> bvault-cli sendalerttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1 "" "" true
+> bvault-cli sendalerttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1 "" "" false false 6 UNSET "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28"
+> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "sendalerttoaddress", "params": ["RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28", 0.1, "donation", "seans outpost"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="sendinstanttoaddress">
 ##### sendinstanttoaddress
 
 3-keys related method.
@@ -333,13 +371,14 @@ Result:
 "txid"                  (string) The transaction id.
 
 Examples:
-> bvault-cli sendinstanttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"]
-> bvault-cli sendinstanttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"] "donation" "seans outpost"
-> bvault-cli sendinstanttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"] "" "" true
-> bvault-cli sendinstanttoaddress "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"] "" "" false false 6 UNSET "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd"
-> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "sendinstanttoaddress", "params": ["1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd", 0.1, "donation", "seans outpost"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
+> bvault-cli sendinstanttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"]
+> bvault-cli sendinstanttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"] "donation" "seans outpost"
+> bvault-cli sendinstanttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"] "" "" true
+> bvault-cli sendinstanttoaddress "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28" 0.1 ["90116a731cafc044c05bd70b8cb1528e659d06539dda0f25288f7f576fc9dfa2"] "" "" false false 6 UNSET "RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28"
+> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "sendinstanttoaddress", "params": ["RAvAthYyPGVEUMWRHBwod63XSKYcx6aF28", 0.1, "donation", "seans outpost"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="signalerttransaction">
 ##### signalerttransaction
 
 3-keys related method.
@@ -393,6 +432,7 @@ Examples:
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "signalerttransaction", "params": ["myhex"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="signinstanttransaction">
 ##### signinstanttransaction
 
 3-keys related method.
@@ -453,6 +493,7 @@ Examples:
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "signinstanttransaction", "params": ["myhex"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
 
+<a name="signrecoverytransaction">
 ##### signrecoverytransaction
 
 3-keys related method.
@@ -501,3 +542,4 @@ Examples:
 > bvault-cli signrecoverytransaction "myhex"
 > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "signrecoverytransaction", "params": ["myhex"] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
 ```
+[Back to top](#top)

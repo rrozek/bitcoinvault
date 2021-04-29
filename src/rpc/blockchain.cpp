@@ -165,6 +165,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* tip, const CBlockIn
     result.pushKV("versionHex", strprintf("%08x", block.nVersion));
     result.pushKV("merkleroot", block.hashMerkleRoot.GetHex());
     result.pushKV("alertmerkleroot", GetCoinbaseAlertMerkleRoot(block).GetHex());
+
     UniValue txs(UniValue::VARR);
     for(const auto& tx : block.vtx)
     {
@@ -172,6 +173,14 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* tip, const CBlockIn
         {
             UniValue objTx(UniValue::VOBJ);
             TxToUniv(*tx, uint256(), objTx, true, RPCSerializationFlags());
+
+            vaulttxntype txType = GetVaultTxTypeNonContextual(*tx);
+            vaulttxnstatus txStatus = GetTransactionStatus(tx->GetHash(), Params().GetConsensus(), txType);
+
+            objTx.pushKV("type", getTxTypeName(txType));
+            if (txStatus != TX_UNKNOWN)
+                objTx.pushKV("status", getTxStatusName(txStatus));
+
             txs.push_back(objTx);
         }
         else
@@ -185,6 +194,14 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* tip, const CBlockIn
         {
             UniValue objATx(UniValue::VOBJ);
             TxToUniv(*atx, uint256(), objATx, true, RPCSerializationFlags());
+
+            vaulttxntype txType = GetVaultTxTypeNonContextual(*atx);
+            vaulttxnstatus txStatus = GetTransactionStatus(atx->GetHash(), Params().GetConsensus(), txType);
+
+            objATx.pushKV("type", getTxTypeName(txType));
+            if (txStatus != TX_UNKNOWN)
+                objATx.pushKV("status", getTxStatusName(txStatus));
+
             atxs.push_back(objATx);
         }
         else

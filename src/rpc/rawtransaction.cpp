@@ -48,25 +48,7 @@ void TxToJSON(const CBaseTransaction& tx, const uint256 hashBlock, const vaulttx
     // data into the returned UniValue.
     TxToUniv(tx, uint256(), entry, true, RPCSerializationFlags());
 
-    auto getTxTypeName = [] (const vaulttxntype txType) -> std::string {
-        switch (txType) {
-            case TX_ALERT: return "TX_ALERT";
-            case TX_INSTANT: return "TX_INSTANT";
-            case TX_RECOVERY: return "TX_RECOVERY";
-            case TX_INVALID: return "TX_INVALID";
-            default: return "TX_NONVAULT";
-        }
-    };
     entry.pushKV("type", getTxTypeName(txType));
-
-    auto getTxStatusName = [] (const vaulttxnstatus txStatus) -> std::string {
-        switch (txStatus) {
-            case TX_PENDING: return "PENDING";
-            case TX_CONFIRMED: return "CONFIRMED";
-            case TX_RECOVERED: return "RECOVERED";
-            default: return "INVALID";
-        }
-    };
     if (txStatus != TX_UNKNOWN)
     	entry.pushKV("status", getTxStatusName(txStatus));
 
@@ -2171,4 +2153,25 @@ void RegisterRawTransactionRPCCommands(CRPCTable &t)
 {
     for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
         t.appendCommand(commands[vcidx].name, &commands[vcidx]);
+}
+
+std::string getTxStatusName(const vaulttxnstatus txStatus)
+{
+    switch (txStatus) {
+    case TX_PENDING: return "PENDING";
+    case TX_CONFIRMED: return "CONFIRMED";
+    case TX_RECOVERED: return "RECOVERED";
+    default: return "INVALID";
+    }
+}
+
+std::string getTxTypeName(const vaulttxntype txType)
+{
+    switch (txType) {
+    case TX_ALERT: return "TX_ALERT";
+    case TX_INSTANT: return "TX_INSTANT";
+    case TX_RECOVERY: return "TX_RECOVERY";
+    case TX_INVALID: return "TX_INVALID";
+    default: return "TX_NONVAULT";
+    }
 }

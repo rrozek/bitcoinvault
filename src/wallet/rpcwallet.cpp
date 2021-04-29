@@ -178,25 +178,7 @@ static void WalletTxToJSON(interfaces::Chain& chain, interfaces::Chain::Lock& lo
     for (const std::pair<const std::string, std::string>& item : wtx.mapValue)
         entry.pushKV(item.first, item.second);
 
-    auto getTxTypeName = [] (const vaulttxntype txType) -> std::string {
-        switch (txType) {
-            case TX_ALERT: return "TX_ALERT";
-            case TX_INSTANT: return "TX_INSTANT";
-            case TX_RECOVERY: return "TX_RECOVERY";
-            case TX_INVALID: return "TX_INVALID";
-            default: return "TX_NONVAULT";
-        }
-    };
     entry.pushKV("type", getTxTypeName(txType));
-
-    auto getTxStatusName = [] (const vaulttxnstatus txStatus) -> std::string {
-        switch (txStatus) {
-            case TX_PENDING: return "PENDING";
-            case TX_CONFIRMED: return "CONFIRMED";
-            case TX_RECOVERED: return "RECOVERED";
-            default: return "UNKNOWN";
-        }
-    };
     entry.pushKV("status", getTxStatusName(txStatus));
 }
 

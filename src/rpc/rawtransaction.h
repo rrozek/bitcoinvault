@@ -24,4 +24,7 @@ UniValue SignTransaction(interfaces::Chain& chain, CMutableTransaction& mtx, con
 /** Create a transaction from univalue parameters */
 CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniValue& outputs_in, const UniValue& locktime, const UniValue& rbf);
 
+std::string getTxStatusName(const vaulttxnstatus txStatus);
+std::string getTxTypeName(const vaulttxntype txType);;
+
 #endif // BITCOIN_RPC_RAWTRANSACTION_H

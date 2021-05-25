@@ -94,7 +94,7 @@ static UniValue getrawtransaction(const JSONRPCRequest& request)
                     RPCResult{"if verbose is not set or set to false",
             "\"data\"      (string) The serialized, hex-encoded data for 'txid'\n"
                      },
-                     RPCResult{"if verbose is set to true",
+                     RPCResult{"if verbose is set to true or 1",
             "{\n"
             "  \"in_active_chain\": b, (bool) Whether specified block is in the active chain or not (only present with explicit \"blockhash\" argument)\n"
             "  \"hex\" : \"data\",       (string) The serialized, hex-encoded data for 'txid'\n"
@@ -143,11 +143,57 @@ static UniValue getrawtransaction(const JSONRPCRequest& request)
             "  \"time\" : ttt,             (numeric) Same as \"blocktime\"\n"
             "}\n"
                     },
+                    RPCResult{"if verbose is set to 2",
+            "{\n"
+            "  \"fee\" : \"n\",          (numeric) Fee counted by vin-vout.\n"
+            "  \"sum_vin\" : \"n\",      (numeric) Sum(Vins for current transaction) \n"
+            "  \"vins\" : [     (array of json objects)\n"
+            "     {\n"
+            "       \"txid\": \"id\",    (string) The transaction id\n"
+            "       \"amount\": n,       (numeric) amount for input\n"
+            "       \"vout\": n,         (numeric) entry number\n"
+            "       \"address\": n,      (strubg) input address\n"
+            "     }\n"
+            "  \"in_active_chain\": b, (bool) Whether specified block is in the active chain or not (only present with explicit \"blockhash\" argument)\n"
+            "  \"hex\" : \"data\",       (string) The serialized, hex-encoded data for 'txid'\n"
+            "  \"txid\" : \"id\",        (string) The transaction id (same as provided)\n"
+            "  \"hash\" : \"id\",        (string) The transaction hash (differs from txid for witness transactions)\n"
+            "  \"size\" : n,             (numeric) The serialized transaction size\n"
+            "  \"vsize\" : n,            (numeric) The virtual transaction size (differs from size for witness transactions)\n"
+            "  \"weight\" : n,           (numeric) The transaction's weight (between vsize*4-3 and vsize*4)\n"
+            "  \"version\" : n,          (numeric) The version\n"
+            "  \"locktime\" : ttt,       (numeric) The lock time\n"
+            "  \"vout\" : [              (array of json objects)\n"
+            "     {\n"
+            "       \"value\" : x.xxx,            (numeric) The value in " + CURRENCY_UNIT + "\n"
+            "       \"n\" : n,                    (numeric) index\n"
+            "       \"scriptPubKey\" : {          (json object)\n"
+            "         \"asm\" : \"asm\",          (string) the asm\n"
+            "         \"hex\" : \"hex\",          (string) the hex\n"
+            "         \"reqSigs\" : n,            (numeric) The required sigs\n"
+            "         \"type\" : \"pubkeyhash\",  (string) The type, eg 'pubkeyhash'\n"
+            "         \"addresses\" : [           (json array of string)\n"
+            "           \"address\"        (string) bitcoin address\n"
+            "           ,...\n"
+            "         ]\n"
+            "       }\n"
+            "     }\n"
+            "     ,...\n"
+            "  ],\n"
+            "  \"type\" : \"type\",	       (string) The transaction type\n"
+            "  \"status\" : \"status\",	   (string) The transaction status\n"
+            "  \"blockhash\" : \"hash\",   (string) the block hash\n"
+            "  \"confirmations\" : n,      (numeric) The confirmations\n"
+            "  \"blocktime\" : ttt         (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"time\" : ttt,             (numeric) Same as \"blocktime\"\n"
+                },
                 },
                 RPCExamples{
                     HelpExampleCli("getrawtransaction", "\"mytxid\"")
             + HelpExampleCli("getrawtransaction", "\"mytxid\" true")
             + HelpExampleRpc("getrawtransaction", "\"mytxid\", true")
+            + HelpExampleRpc("getrawtransaction", "\"mytxid\" 2")
+            + HelpExampleRpc("getrawtransaction", "\"mytxid\", 2")
             + HelpExampleCli("getrawtransaction", "\"mytxid\" false \"myblockhash\"")
             + HelpExampleCli("getrawtransaction", "\"mytxid\" true \"myblockhash\"")
                 },
@@ -167,9 +213,9 @@ static UniValue getrawtransaction(const JSONRPCRequest& request)
     }
 
     // Accept either a bool (true) or a num (>=1) to indicate verbose output.
-    bool fVerbose = false;
+    int fVerbose = 0;
     if (!request.params[1].isNull()) {
-        fVerbose = request.params[1].isNum() ? (request.params[1].get_int() != 0) : request.params[1].get_bool();
+        fVerbose = request.params[1].isNum() ? request.params[1].get_int() : request.params[1].get_bool();
     }
 
     if (!request.params[2].isNull()) {
@@ -234,6 +280,49 @@ static UniValue getrawtransaction(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     if (blockindex) result.pushKV("in_active_chain", in_active_chain);
     TxToJSON(*tx, hash_block, txType, txStatus,  result);
+
+    if (fVerbose == 2) {
+        int64_t sum_vin = 0;
+        UniValue vins_info(UniValue::VARR) ;
+        for (auto& vin : tx->vin) {
+            CBaseTransactionRef prev_tx;
+            uint256 prev_hash_block;
+            vaulttxnstatus prev_txStatus;
+            if (GetTransaction(vin.prevout.hash, prev_tx, Params().GetConsensus(), prev_hash_block, blockindex, &prev_txStatus)) {
+                sum_vin += prev_tx->vout[vin.prevout.n].nValue;
+                txnouttype type;
+                std::vector<CTxDestination> addresses;
+                int nRequired;
+                if (ExtractDestinations(prev_tx->vout[vin.prevout.n].scriptPubKey, type, addresses, nRequired)) {
+                    UniValue res(UniValue::VOBJ);
+                    res.pushKV("txid", prev_tx->GetHash().GetHex());
+                    res.pushKV("amount", ValueFromAmount(prev_tx->vout[vin.prevout.n].nValue));
+                    res.pushKV("vout", static_cast<uint64_t>(vin.prevout.n));
+
+                    if (addresses.size() == 1) {
+                        res.pushKV("address", EncodeDestination(addresses[0]));
+                    } else {
+                        UniValue a(UniValue::VARR);
+                        for (const CTxDestination& addr : addresses) {
+                            a.push_back(EncodeDestination(addr));
+                        }
+                        res.pushKV("address", a);
+                    }
+                    vins_info.push_back(std::move(res));
+                }
+            }
+        }
+
+        int64_t fee = sum_vin;
+        for (auto& vout : tx->vout) {
+            fee -= vout.nValue;
+        }
+
+        result.pushKV("fee", ValueFromAmount(fee > 0 ? fee : 0));
+        result.pushKV("sum_vin", ValueFromAmount(sum_vin));
+        result.pushKV("vin", vins_info);
+    }
+
     return result;
 }
 

@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v2.4.0 (2021-05-25)
+### Feature
+* Add second verbosity level to `getrawtransaction` rpc call ([`e5565ac`](https://github.com/bitcoinvault/bitcoinvault/commit/e5565ac3fcb873f9d45c6b54e78e811e47b3bc90))
+
 ## v2.3.0 (2021-05-18)
 ### Feature
 * **regtest:** Create setup for regtest ([#64](https://github.com/bitcoinvault/bitcoinvault/issues/64)) ([`62cb92f`](https://github.com/bitcoinvault/bitcoinvault/commit/62cb92f60ed783fdfefaed3a90b44d821735fec9))

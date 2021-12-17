@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v2.4.1 (2021-12-17)
+### Fix
+* **rpc:** Getting details for TX_ALERT transactions in gettransaction method ([#56](https://github.com/bitcoinvault/bitcoinvault/issues/56)) ([`c257522`](https://github.com/bitcoinvault/bitcoinvault/commit/c257522c4031acc709e17b359c8e198f85f2dd40))
+
+### Documentation
+* **ci:** Update env's descriptions ([`07b7e95`](https://github.com/bitcoinvault/bitcoinvault/commit/07b7e95aaf4b7da10011b8e75e617569a0356d7d))
+
 ## v2.4.0 (2021-05-25)
 ### Feature
 * Add second verbosity level to `getrawtransaction` rpc call ([`e5565ac`](https://github.com/bitcoinvault/bitcoinvault/commit/e5565ac3fcb873f9d45c6b54e78e811e47b3bc90))

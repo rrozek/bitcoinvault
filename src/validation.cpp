@@ -4144,14 +4144,17 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     }
 
     // Check if the coinbase goes to the licensed addresses.
-	if (fCheckDdms && nHeight >= consensusParams.DDMSHeight) {
-	   CTransactionRef cb = block.vtx[0];
-	   for (int i = 0; i < cb->vout.size(); ++i) {
-			   if (i != GetWitnessCommitmentIndex(block) && !DdmsVerifyCoinbaseOutput(cb, i)) {
-					   return state.DoS(100, false, REJECT_INVALID, "ddms-output-not-allowed", false, "");
-			   }
-	   }
-	}
+    if (fCheckDdms) {
+        if (nHeight >= consensusParams.DDMSHeight &&
+            nHeight < consensusParams.StopDDMSHeight) {
+            CTransactionRef cb = block.vtx[0];
+            for (int i = 0; i < cb->vout.size(); ++i) {
+                if (i != GetWitnessCommitmentIndex(block) && !DdmsVerifyCoinbaseOutput(cb, i)) {
+                    return state.DoS(100, false, REJECT_INVALID, "ddms-output-not-allowed", false, "");
+                }
+            }
+        }
+    }
 
     // Validation for witness commitments.
     // * We compute the witness hash (which is the hash including witnesses) of all the block's transactions, except the

@@ -71,8 +71,9 @@ public:
         consensus.BIP66Height = 1;
         consensus.CSVHeight = 1;
         consensus.SegwitHeight = 1;
-        consensus.AlertsHeight = 58420; // Not yet enabled
+        consensus.AlertsHeight = 58420;
         consensus.DDMSHeight = 29430;
+        consensus.StopDDMSHeight = INT_MAX; // Not decided yet
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 10 * 60; // 10 minutes (block time like Bitcoin)
@@ -179,8 +180,9 @@ public:
         consensus.BIP66Height = 1;
         consensus.CSVHeight = 1;
         consensus.SegwitHeight = 1;
-        consensus.AlertsHeight = 92960; // Not yet enabled
-        consensus.DDMSHeight = INT_MAX; // Do not activate DDMS on testnet
+        consensus.AlertsHeight = 92960;
+        consensus.DDMSHeight = 874900;
+        consensus.StopDDMSHeight = 875000;
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 10 * 60; // 10 minutes (block time like Bitcoin)
@@ -278,6 +280,7 @@ public:
         consensus.SegwitHeight = 1; // SEGWIT is always activated on regtest unless overriden
         consensus.AlertsHeight = 1;
         consensus.DDMSHeight = INT_MAX; // Do not activate DDMS on regtest
+        consensus.StopDDMSHeight = INT_MAX; // DDMS not active on regtest
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 10 * 60;

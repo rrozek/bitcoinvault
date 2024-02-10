@@ -73,7 +73,7 @@ public:
         consensus.SegwitHeight = 1;
         consensus.AlertsHeight = 58420;
         consensus.DDMSHeight = 29430;
-        consensus.StopDDMSHeight = INT_MAX; // Not decided yet
+        consensus.StopDDMSHeight = 226566;
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 10 * 60; // 10 minutes (block time like Bitcoin)
